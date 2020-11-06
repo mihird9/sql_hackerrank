@@ -13,15 +13,15 @@ columns: ID and Salary (offered salary in $ thousands per month).
 **Solution:** The simplest way to solve this query is using `INNER JOIN` like so:
 
 ```sql
-select S.name 
-from Students as S 
-inner join Friends as F 
+select S.name
+from Students as S
+inner join Friends as F
 on S.id = F.id
-inner join Packages as P1 
-on S.id = P1.id 
-inner join Packages as P2 
+inner join Packages as P1
+on S.id = P1.id
+inner join Packages as P2
 on F.friend_id = P2.id
-where P2.salary > P1.salary 
+where P2.salary > P1.salary
 order by P2.salary;
 ```
 
@@ -32,10 +32,10 @@ Write a query to output all such symmetric pairs in ascending order by the value
 **Solution:**
 
 ```sql
-select F1.X, 
-       F1.Y 
+select F1.X,
+       F1.Y
 from Functions as F1
-inner join Functions as F2 
+inner join Functions as F2
 on F1.X = F2.Y and F1.Y = F2.X
 group by F1.X, F1.Y
 having F1.X < F1.Y                 -- for cases where X1 != Y1 (i.e. for symmetric pairs 2 24, and 24 2)
