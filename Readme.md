@@ -6,9 +6,6 @@ Let us start by solving medium and hard SQL problems in HackerRank.
 ## Level: Medium
 
 **Q.1: Placements:**  
-You are given three tables: Students, Friends and Packages. Students contains two columns: ID and Name.
-Friends contains two columns: ID and Friend_ID (ID of the ONLY best friend). Packages contains two
-columns: ID and Salary (offered salary in $ thousands per month).  
 
 **Solution:** The simplest way to solve this query is using `INNER JOIN` like so:
 
@@ -45,16 +42,8 @@ order by F1.X;
 ```
 
 **Q.3: The Report:**  
-You are given two tables: Students and Grades. Students contains three columns ID, Name and Marks.  
-Grades contains the following data:  
-Ketty gives Eve a task to generate a report containing three columns: Name, Grade and Mark. Ketty
-doesn't want the NAMES of those students who received a grade lower than 8. The report must be in
-descending order by grade -- i.e. higher grades are entered first. If there is more than one student with
-the same grade (8-10) assigned to them, order those particular students by their name alphabetically.
-Finally, if the grade is lower than 8, use "NULL" as their name and list them by their grades in descending
-order. If there is more than one student with the same grade (1-7) assigned to them, order those
-particular students by their marks in ascending order.  
-Write a query to help Eve.
+
+**Solution:** Here we can use the `case when` function to generate the report as per the requirement.
 
 ```sql
 select case when Grade >=8 then Name
@@ -79,4 +68,19 @@ from
 from students as S)x
 order by Grade desc, Name;
 
+```
+
+**Q.4: The PADS:**
+
+**Solution:** Here we can write two queries as below making use of the string functions/operators in SQL.
+
+```sql
+select name + '(' + left(occupation, 1) + ')'
+from occupations
+order by name;
+
+select 'There are a total of', count(occupation), lower(occupation) + 's.'
+from occupations
+group by occupation
+order by count(occupation), occupation;
 ```
