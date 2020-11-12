@@ -23,8 +23,6 @@ order by P2.salary;
 ```
 
 **Q.2: Symmetric Pairs:**  
-You are given a table, Functions , containing two columns: X and Y. Two pairs (X , Y ) and (X , Y ) are said to be symmetric pairs if X = Y and X = Y .  
-Write a query to output all such symmetric pairs in ascending order by the value of X.
 
 **Solution:**
 
@@ -83,4 +81,84 @@ select 'There are a total of', count(occupation), lower(occupation) + 's.'
 from occupations
 group by occupation
 order by count(occupation), occupation;
+```
+
+**Q.5: Occupations:**
+
+**Solution:** We can write this query in multiple ways. One of the ways is using Window functions and full outer joins to merge the subqueries.  
+
+```sql
+Select D.Name as Doctor_name,
+       P.Name as Professor_name,
+       S.Name as Singer_name,
+       A.Name as Actor_name
+from(
+    (Select Name,
+            row_number() over (partition by occupation
+                               order by name) as id
+     from Occupations
+     where Occupation = 'Doctor') as D
+    full outer join
+    (Select Name,
+            row_number() over (partition by occupation
+                               order by name) as id
+     from Occupations
+     where Occupation = 'Professor') as P
+    on D.id = P.id
+    full outer join
+    (Select Name,
+            row_number() over (partition by occupation
+                               order by name) as id
+     from Occupations
+     where Occupation = 'Singer') as S
+    on P.id = S.id
+    full outer join
+    (Select Name,
+            row_number() over (partition by occupation
+                               order by name) as id
+     from Occupations
+     where Occupation = 'Actor') as A
+    on S.id = A.id
+   );
+```
+
+Another way to solve this query is using the `pivot` function in T-SQL. However, in the above query I have tried sticking to using standard SQL.
+
+**Q.6: Binary Tree Nodes:**
+
+**Solution:** We can write this query using simple case when statements.  
+Note that all the nodes (in the tree) are already mentioned in the N column in the table.  
+
+```sql
+select N as Node,
+       (case when P is null then 'Root'
+             when N in (select distinct P from bst where P is not null) then 'Inner'
+             when N not in (select distinct P from bst where P is not null) then 'Leaf'
+        end) as Role
+from bst
+order by N;
+```
+
+**Q.7: New Companies:**
+
+**Solution:** This query can be solved using `count` aggregate function and simple `inner join` on all the tables.  
+
+```sql
+select C.company_code,
+       C.founder,
+       count(distinct L.lead_manager_code),
+       count(distinct S.senior_manager_code),
+       count(distinct M.manager_code),
+       count(distinct E.employee_code)
+from Company as C
+inner join Lead_Manager as L
+on C.company_code = L.company_code
+inner join Senior_Manager as S
+on L.lead_manager_code = S.lead_manager_code
+inner join Manager as M
+on S.senior_manager_code = M.senior_manager_code
+inner join Employee as E
+on M.manager_code = E.manager_code
+group by C.company_code, C.founder
+order by C.company_code, C.founder;
 ```
