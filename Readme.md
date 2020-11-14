@@ -162,3 +162,38 @@ on M.manager_code = E.manager_code
 group by C.company_code, C.founder
 order by C.company_code, C.founder;
 ```
+
+**Q.8: The Blunder:**  
+Note: This question is under the simple category, but I have included it nevertheless.
+
+**Solution:** This query is a little convoluted, but this is what got the correct result. There could be another cleaner way of writing this query.
+
+```sql
+select cast(ceiling(avg(cast(salary as float)) - avg(cast(replace(salary, '0', '') as float))) as int)
+from employees;
+```
+
+**Q. 9: Top Earners:**  
+Note: This question is under the simple category, but I have included it nevertheless.
+
+**Solution:** This query can be solved using a simple sub-query as below:
+
+```sql
+select max(salary*months),
+       count(salary*months)
+from employee
+where salary*months in (select max(salary*months)
+                        from employee);
+```
+
+**Q.10: Weather Observation station 2:**  
+Note: This question is under the simple category, but I have included it nevertheless as it is weirdly framed and might be helpful to others.
+
+**Solution:**  
+
+```sql
+select cast(sum(LAT_N) as decimal(10,2)) as lat, 
+       cast(sum(LONG_W) as decimal(10,2)) as lon 
+from Station;
+```
+
