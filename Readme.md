@@ -197,3 +197,42 @@ select cast(sum(LAT_N) as decimal(10,2)) as lat,
 from Station;
 ```
 
+**Q.11: Weather Observation Station 18:**
+
+**Solution:** We can solve this query using a simple subquery and the `abs` function.
+
+```sql
+select cast((abs(a - c) + abs(b - d)) as decimal(10,4)) 
+from (select min(lat_n) as a,
+             min(long_w) as b,
+             max(lat_n) as c,
+             max(long_w) as d
+      from station) x;
+```
+
+**Q.12: Weather Observation Station 19:**
+
+**Solution:** Similar to the earlier question.
+
+```sql
+select cast((sqrt(square(a - c) + square(b - d))) as decimal(10,4)) 
+from (select min(lat_n) as a,
+             min(long_w) as b,
+             max(lat_n) as c,
+             max(long_w) as d
+      from station) x;
+```
+
+**Q.13: Weather Observation 20:**
+
+**Solution:** To solve this query, we make use of sub-queries in the FROM and WHERE clause, as well as the `row_number()` function.
+
+```sql
+select cast(lat_n as decimal(10,4))
+from (select lat_n,
+       row_number()over(order by lat_n) as rownum
+      from station) x
+where rownum = (select ceiling(cast(count(lat_n) as float)/2)
+                from station);
+```
+
